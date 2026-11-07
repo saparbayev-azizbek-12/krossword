@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Krossvord: O‘qituvchining shaxsiy sifatlari</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f3ec;--fg:#1f2a44;--card:#ffffff;--mut:#4a5160;--acc:#e8a33d;--ok:#2a9d8f;--line:#c9cfdc;--hl:#fbe9c6;--bad:#f3c9c4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a2b;--fg:#f6f3ec;--card:#1f2a44;--mut:#c9cfdc;--line:#46506b;--hl:#5a4a22;--bad:#6b2f2a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif;padding:20px}
+h1{font-size:26px;margin:0 0 6px}p.s{margin:0 0 16px;color:var(--mut)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+button{background:var(--fg);color:var(--bg);border:0;border-radius:8px;padding:10px 16px;font-size:15px;cursor:pointer}
+button.o{background:var(--acc);color:#1f2a44}#msg{align-self:center;font-weight:700;color:var(--ok)}
+.wrap{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.gridbox{overflow-x:auto;max-width:100%;padding-bottom:6px}
+#g{display:grid;gap:2px;width:max-content}
+.c{width:34px;height:34px;position:relative}.c.b{visibility:hidden}
+.c input{width:100%;height:100%;text-align:center;font-size:18px;font-weight:700;text-transform:uppercase;border:1px solid var(--line);border-radius:4px;background:var(--card);color:var(--fg);padding:0;caret-color:transparent}
+.c input.h{background:var(--hl)}.c input.ok{background:var(--ok);color:#fff}.c input.no{background:var(--bad)}
+.c i{position:absolute;left:2px;top:0;font-size:10px;font-style:normal;color:var(--mut);pointer-events:none}
+.cl{flex:1;min-width:280px;max-width:520px}.cl h2{font-size:18px;margin:0 0 8px}
+.cl ol{list-style:none;margin:0 0 18px;padding:0}.cl li{padding:8px 10px;background:var(--card);border-radius:8px;margin-bottom:6px;font-size:15px;line-height:1.35;cursor:pointer;border-left:6px solid var(--acc)}
+.cl li.h{outline:2px solid var(--acc)}.cl li b{margin-right:6px}.cl li.d{border-left-color:var(--ok);opacity:.7}
+</style></head><body>
+<h1>Krossvord: O‘qituvchining shaxsiy sifatlari</h1>
+<p class="s">Ta’rifga qarab sifat nomini toping. Kataklarni bosing va harflarni yozing (apostrofsiz: MASULIYATLILIK).</p>
+<div class="bar"><button id="chk">Tekshirish</button><button id="hint" class="o">Harfni ko‘rsatish</button><button id="rev" class="o">Javoblarni ko‘rsatish</button><button id="clr">Tozalash</button><span id="msg"></span></div>
+<div class="wrap"><div class="gridbox"><div id="g"></div></div>
+<div class="cl"><h2>Gorizontal →</h2><ol id="ca"></ol><h2>Vertikal ↓</h2><ol id="cd"></ol></div></div>
+<script>
+var D={"h": 18, "w": 14, "e": [{"a": "MASULIYATLILIK", "c": "O‘z vazifalarini vijdonan bajarish", "r": 11, "k": 0, "d": "A", "n": 8}, {"a": "TALABCHANLIK", "c": "Ta’lim va tarbiya jarayonida aniq talablar qo‘yish", "r": 0, "k": 13, "d": "D", "n": 2}, {"a": "ADOLATLILIK", "c": "Barcha o‘quvchilarga xolis munosabatda bo‘lish", "r": 3, "k": 9, "d": "D", "n": 6}, {"a": "MEHRIBONLIK", "c": "O‘quvchilarga samimiy munosabat ko‘rsatish", "r": 3, "k": 4, "d": "D", "n": 5}, {"a": "SABRTOQAT", "c": "Qiyin vaziyatlarda o‘zini boshqara olish", "r": 0, "k": 5, "d": "A", "n": 1}, {"a": "HALOLLIK", "c": "Rostgo‘ylik va vijdon asosida faoliyat yuritish", "r": 7, "k": 11, "d": "D", "n": 7}, {"a": "INSONPARVARLIK", "c": "Har bir o‘quvchiga hurmat va e’tibor bilan munosabatda bo‘lish", "r": 2, "k": 7, "d": "D", "n": 3}, {"a": "IJODKORLIK", "c": "Ta’lim jarayoniga yangicha yondashish", "r": 13, "k": 0, "d": "A", "n": 9}, {"a": "TASHABBUSKORLIK", "c": "Yangi g‘oya va usullarni ilgari surish", "r": 3, "k": 2, "d": "D", "n": 4}]},H=D.h,W=D.w,E=D.e,cell={},dir="A",cur=null;
+var g=document.getElementById("g");g.style.gridTemplateColumns="repeat("+W+",34px)";
+E.forEach(function(e){for(var i=0;i<e.a.length;i++){var r=e.r+(e.d=="D"?i:0),c=e.k+(e.d=="A"?i:0),k=r+"_"+c;(cell[k]=cell[k]||{r:r,c:c,ch:e.a[i],w:{}}).w[e.d]=e;if(i==0)cell[k].n=e.n}});
+for(var r=0;r<H;r++)for(var c=0;c<W;c++){var k=r+"_"+c,d=document.createElement("div");d.className="c";
+ if(!cell[k]){d.className+=" b"}else{var x=cell[k],inp=document.createElement("input");inp.maxLength=1;inp.autocomplete="off";inp.dataset.k=k;x.el=inp;
+  if(x.n){var n=document.createElement("i");n.textContent=x.n;d.appendChild(n)}
+  d.appendChild(inp);inp.addEventListener("focus",function(){foc(this.dataset.k)});
+  inp.addEventListener("click",function(){var x=cell[this.dataset.k];if(cur==this.dataset.k&&x.w.A&&x.w.D){dir=dir=="A"?"D":"A";foc(this.dataset.k)}});
+  inp.addEventListener("input",function(){var v=this.value.replace(/[^A-Za-z]/g,"").toUpperCase();this.value=v;this.className="";if(v)step(this.dataset.k,1)});
+  inp.addEventListener("keydown",function(ev){var k=this.dataset.k;if(ev.key=="Backspace"&&!this.value){step(k,-1);ev.preventDefault()}
+   var m={ArrowRight:["A",1],ArrowLeft:["A",-1],ArrowDown:["D",1],ArrowUp:["D",-1]}[ev.key];if(m){dir=m[0];step(k,m[1],1);ev.preventDefault()}})}
+ g.appendChild(d)}
+function ent(x){return x.w[dir]||x.w[dir=="A"?"D":"A"]}
+function nb(x,s){var e=ent(x);if(!e)return null;var dd=e.d=="A"?[0,s]:[s,0],k=(x.r+dd[0])+"_"+(x.c+dd[1]);return cell[k]&&cell[k].w[e.d]==e?k:null}
+function step(k,s,mv){var n=nb(cell[k],s);if(n){cell[n].el.focus();if(!mv&&s<0)cell[n].el.value=""}}
+function foc(k){cur=k;var x=cell[k],e=ent(x);dir=e.d;document.querySelectorAll(".h").forEach(function(o){o.classList.remove("h")});
+ E.forEach(function(q){if(q==e){for(var i=0;i<q.a.length;i++)cell[(q.r+(q.d=="D"?i:0))+"_"+(q.k+(q.d=="A"?i:0))].el.classList.add("h");q.li.classList.add("h")}})}
+E.forEach(function(e){var li=document.createElement("li");li.innerHTML="<b>"+e.n+".</b>"+e.c+" <span style='color:var(--mut)'>("+e.a.length+" harf)</span>";
+ li.onclick=function(){dir=e.d;cell[e.r+"_"+e.k].el.focus()};e.li=li;document.getElementById(e.d=="A"?"ca":"cd").appendChild(li)});
+["ca","cd"].forEach(function(id){var o=document.getElementById(id);[].slice.call(o.children).sort(function(a,b){return parseInt(a.textContent)-parseInt(b.textContent)}).forEach(function(l){o.appendChild(l)})});
+function all(f){for(var k in cell)f(cell[k])}
+document.getElementById("chk").onclick=function(){var ok=0,tot=0;all(function(x){tot++;var v=x.el.value.toUpperCase();x.el.className=v?(v==x.ch?"ok":"no"):"";if(v==x.ch)ok++});
+ E.forEach(function(e){var s="";for(var i=0;i<e.a.length;i++)s+=cell[(e.r+(e.d=="D"?i:0))+"_"+(e.k+(e.d=="A"?i:0))].el.value.toUpperCase();e.li.classList.toggle("d",s==e.a)});
+ document.getElementById("msg").textContent=ok==tot?"Barakalla! Hammasi to‘g‘ri!":ok+" / "+tot+" harf to‘g‘ri"};
+document.getElementById("hint").onclick=function(){if(cur){var x=cell[cur];x.el.value=x.ch;x.el.className="ok"}};
+document.getElementById("rev").onclick=function(){all(function(x){x.el.value=x.ch;x.el.className="ok"})};
+document.getElementById("clr").onclick=function(){all(function(x){x.el.value="";x.el.className=""});document.getElementById("msg").textContent=""};
+</script></body></html>
